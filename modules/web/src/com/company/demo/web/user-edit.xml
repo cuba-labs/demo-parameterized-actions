@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2008-2019 Haulmont.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="User editor"
+        focusComponent="form"
+        messagesPack="com.company.demo.web">
+    <data>
+        <instance id="userDc"
+                  class="com.haulmont.cuba.security.entity.User"
+                  view="user.edit">
+            <loader/>
+            <collection id="userRolesDc" property="userRoles"/>
+        </instance>
+        <collection id="rolesDc" class="com.haulmont.cuba.security.entity.Role"/>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="tablesBox" spacing="true">
+        <form id="form" dataContainer="userDc">
+            <column width="250px">
+                <textField id="loginField" property="login"/>
+                <textField id="nameField" property="name"/>
+                <pickerField id="groupField" property="group">
+                    <actions>
+                        <action id="lookup" type="picker_lookup">
+                            <properties>
+                                <property name="screenId" value="GroupLookup"/>
+                            </properties>
+                        </action>
+                        <action id="open" type="picker_open">
+                            <properties>
+                                <property name="screenId" value="GroupEdit"/>
+                            </properties>
+                        </action>
+                        <action id="clear" type="picker_clear"/>
+                    </actions>
+                </pickerField>
+            </column>
+        </form>
+        <hbox id="tablesBox" width="100%">
+            <table id="rolesTable" dataContainer="rolesDc" width="100%" height="100%">
+                <buttonsPanel>
+                    <button id="addRoleBtn" action="rolesTable.add"/>
+                </buttonsPanel>
+                <actions>
+                    <action id="add" type="add">
+                        <properties>
+                            <property name="screenId" value="RoleLookup"/>
+                        </properties>
+                    </action>
+                    <action id="remove" type="remove"/>
+                </actions>
+                <columns>
+                    <column id="name"/>
+                </columns>
+            </table>
+            <table id="userRolesTable" dataContainer="userRolesDc" width="100%" height="100%">
+                <buttonsPanel>
+                    <button id="excludeUserRoleBtn" action="userRolesTable.exclude"/>
+                </buttonsPanel>
+                <actions>
+                    <action id="exclude" type="exclude">
+                        <properties>
+                            <property name="confirmation" value="true"/>
+                            <property name="confirmationTitle" value="Attention!"/>
+                            <property name="confirmationMessage" value="Exclude?"/>
+                        </properties>
+                    </action>
+                </actions>
+                <columns>
+                    <column id="role.name"/>
+                </columns>
+            </table>
+        </hbox>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>
